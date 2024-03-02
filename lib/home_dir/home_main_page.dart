@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:twothreehours_dev/reserv_dir/reserv_detail_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -50,6 +51,7 @@ class _HomePageState extends State<HomePage>
               child: Image.asset('assets/images/2-3hours_logo.png'),
             ),
             pinned: true,
+            stretch: true,
             expandedHeight: 328,
             actions: [
               IconButton(
@@ -104,7 +106,7 @@ class _HomePageState extends State<HomePage>
               child: AnimatedContainer(
                 height: _noticeIndex ? 130 : 48,
                 decoration: BoxDecoration(
-                    color: Colors.black26,
+                    color: Colors.black12,
                     borderRadius: BorderRadius.circular(8)),
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.fastOutSlowIn,
@@ -166,7 +168,8 @@ class _HomePageState extends State<HomePage>
                           controller: _exhibitionsPageController,
                           itemCount: 10,
                           itemBuilder: (_, index) => Padding(
-                            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                            padding:
+                                const EdgeInsets.only(left: 8.0, right: 8.0),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Stack(
@@ -207,7 +210,7 @@ class _HomePageState extends State<HomePage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
-                  padding: EdgeInsets.only(top: 16.0, left: 16),
+                  padding: EdgeInsets.only(top: 32.0, left: 16),
                   child: Text(
                     '두세시간 카테고리',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -387,13 +390,23 @@ class _HomePageState extends State<HomePage>
                   padding: const EdgeInsets.only(top: 16),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: SizedBox(
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        primary: false,
-                        itemBuilder: (context, index) {
-                          return Padding(
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      primary: false,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return ReservPageDetail();
+                                },
+                              ),
+                            );
+                          },
+                          child: Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -452,45 +465,10 @@ class _HomePageState extends State<HomePage>
                                 ),
                               ],
                             ),
-                          );
-                        },
-                        itemCount: 5,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          //Photo by 두세시간
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 16.0, left: 16),
-                  child: Text(
-                    'Photo by 두세시간',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: SizedBox(
-                    height: 300,
-                    child: Stack(
-                      children: [
-                        PageView.builder(
-                          controller: _photoPageController,
-                          itemCount: 10,
-                          itemBuilder: (_, index) => Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              color: Colors.black,
-                            ),
                           ),
-                        ),
-                      ],
+                        );
+                      },
+                      itemCount: 5,
                     ),
                   ),
                 ),

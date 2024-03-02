@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '2-3HOURS',
       theme: ThemeData(
+        primaryColor: const Color(0xff0465f2),
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff0465f2)),
         fontFamily: 'Pretendard',
         useMaterial3: true,
