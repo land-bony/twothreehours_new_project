@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ReservPageDetail extends StatelessWidget {
+class ReservPageDetail extends StatefulWidget {
   const ReservPageDetail({super.key});
+
+  @override
+  State<ReservPageDetail> createState() => _ReservPageDetailState();
+}
+
+class _ReservPageDetailState extends State<ReservPageDetail> {
+  int value1 = 0; // 라디오 버튼의 선택 초기화
 
   @override
   Widget build(BuildContext context) {
@@ -535,7 +542,10 @@ class ReservPageDetail extends StatelessWidget {
                             Text('1. '),
                             SizedBox(width: 4),
                             Flexible(
-                                child: Text('사람들을 싫어하는 강아지들이 있으니 섣불리 접근하지 마세요.', maxLines: 2,))
+                                child: Text(
+                              '사람들을 싫어하는 강아지들이 있으니 섣불리 접근하지 마세요.',
+                              maxLines: 2,
+                            ))
                           ],
                         ),
                         Row(
@@ -544,7 +554,10 @@ class ReservPageDetail extends StatelessWidget {
                             Text('2. '),
                             SizedBox(width: 4),
                             Flexible(
-                                child: Text('사람들을 싫어하는 강아지들이 있으니 섣불리 접근하지 마세요.', maxLines: 2,))
+                                child: Text(
+                              '사람들을 싫어하는 강아지들이 있으니 섣불리 접근하지 마세요.',
+                              maxLines: 2,
+                            ))
                           ],
                         ),
                         Row(
@@ -553,7 +566,10 @@ class ReservPageDetail extends StatelessWidget {
                             Text('3. '),
                             SizedBox(width: 4),
                             Flexible(
-                                child: Text('사람들을 싫어하는 강아지들이 있으니 섣불리 접근하지 마세요.', maxLines: 2,))
+                                child: Text(
+                              '사람들을 싫어하는 강아지들이 있으니 섣불리 접근하지 마세요.',
+                              maxLines: 2,
+                            ))
                           ],
                         ),
                       ],
@@ -581,6 +597,7 @@ class ReservPageDetail extends StatelessWidget {
           width: double.infinity,
           child: FloatingActionButton(
             onPressed: () {
+
               showModalBottomSheet(context: context, builder: buildBottomSheet);
             },
             backgroundColor: Theme.of(context).primaryColor,
@@ -600,12 +617,84 @@ class ReservPageDetail extends StatelessWidget {
 
   // Floating btn Bottom Sheet
   Widget buildBottomSheet(BuildContext context) {
-    return Column(
-      children: [
-        Container(
 
+    int value2 = value1;
+
+    print(value2);
+
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '옵션선택(필수)',
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text('*', style: TextStyle(color: Colors.redAccent))
+              ],
+            ),
+            SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              height: 40,
+              alignment: Alignment.centerLeft,
+              decoration: const BoxDecoration(
+                  border: Border(
+                top: BorderSide(width: 1),
+                left: BorderSide(width: 1),
+                right: BorderSide(width: 1),
+              )),
+              child: const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  '이동수단',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              height: 150,
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(border: Border.all()),
+              child: Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Column(
+                    children: [
+                      RadioListTile(
+                        title: Text("A"),
+                        value: 0,
+                        groupValue: value2,
+                        onChanged: (int? value) {
+                          setState(() {
+                            value2 = value!;
+                            print(value);
+                          });
+                        },
+                      ),
+                      RadioListTile(
+                        title: Text("B"),
+                        value: 1,
+                        groupValue: value2,
+                        onChanged: (int? value) {
+                          setState(() {
+                            value2 = value!;
+                            print(value);
+                          });
+                        },
+                      ),
+                    ],
+                  )),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
