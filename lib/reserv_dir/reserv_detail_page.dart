@@ -465,7 +465,7 @@ class ReservPageDetail extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 8.0,
                         backgroundImage:
-                        AssetImage('assets/images/test_photo.jpg'),
+                            AssetImage('assets/images/test_photo.jpg'),
                       ),
                     ),
                     SizedBox(width: 16),
@@ -485,9 +485,7 @@ class ReservPageDetail extends StatelessWidget {
                           ),
                           Text(
                             '한줄평 입니다.',
-                            style: TextStyle(
-                              color: Colors.black54
-                            ),
+                            style: TextStyle(color: Colors.black54),
                           ),
                           const SizedBox(
                             height: 8,
@@ -515,19 +513,62 @@ class ReservPageDetail extends StatelessWidget {
             const SizedBox(height: 16),
             SizedBox(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Container(
                   width: double.infinity,
-                  height: 100,
+                  constraints: const BoxConstraints(
+                    minHeight: 160,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.black12,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('테스트'),
+                  child: const Padding(
+                    padding: EdgeInsets.only(
+                        top: 8.0, left: 16.0, right: 16.0, bottom: 8),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('1. '),
+                            SizedBox(width: 4),
+                            Flexible(
+                                child: Text('사람들을 싫어하는 강아지들이 있으니 섣불리 접근하지 마세요.', maxLines: 2,))
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('2. '),
+                            SizedBox(width: 4),
+                            Flexible(
+                                child: Text('사람들을 싫어하는 강아지들이 있으니 섣불리 접근하지 마세요.', maxLines: 2,))
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('3. '),
+                            SizedBox(width: 4),
+                            Flexible(
+                                child: Text('사람들을 싫어하는 강아지들이 있으니 섣불리 접근하지 마세요.', maxLines: 2,))
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Container(
+                width: double.infinity,
+                height: 1,
+                color: Colors.black12,
               ),
             ),
             const SizedBox(height: 120),
@@ -539,7 +580,9 @@ class ReservPageDetail extends StatelessWidget {
         child: SizedBox(
           width: double.infinity,
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(context: context, builder: buildBottomSheet);
+            },
             backgroundColor: Theme.of(context).primaryColor,
             child: const Text(
               '신청하기',
@@ -552,6 +595,17 @@ class ReservPageDetail extends StatelessWidget {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  // Floating btn Bottom Sheet
+  Widget buildBottomSheet(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+
+        ),
+      ],
     );
   }
 }
