@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const ShelterPage(),
     const HomePage(),
     const ReservPage(),
-    const MyTimePage()
+    const MytimePage()
   ];
 
   @override

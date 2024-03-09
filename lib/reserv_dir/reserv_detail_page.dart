@@ -11,8 +11,6 @@ class ReservPageDetail extends StatefulWidget {
 }
 
 class _ReservPageDetailState extends State<ReservPageDetail> {
-  int value1 = 0; // 라디오 버튼의 선택 초기화
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -597,8 +595,11 @@ class _ReservPageDetailState extends State<ReservPageDetail> {
           width: double.infinity,
           child: FloatingActionButton(
             onPressed: () {
-
-              showModalBottomSheet(context: context, builder: buildBottomSheet);
+              showModalBottomSheet(
+                context: context,
+                builder: buildCarOptionBottomSheet,
+                showDragHandle: true,
+              );
             },
             backgroundColor: Theme.of(context).primaryColor,
             child: const Text(
@@ -616,85 +617,156 @@ class _ReservPageDetailState extends State<ReservPageDetail> {
   }
 
   // Floating btn Bottom Sheet
-  Widget buildBottomSheet(BuildContext context) {
+  Widget buildCarOptionBottomSheet(BuildContext context) {
+    // 라디오 버튼 변수 초기화
+    int carOptionValue = 0;
 
-    int value2 = value1;
-
-    print(value2);
-
-    return SizedBox(
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
+    // bottom Sheet SetState 변수값 적용을 위해 StatefulBuilder 필요
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter bottomState) {
+        return SizedBox(
+          width: double.infinity,
+          height: 392,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '옵션선택(필수)',
-                  style: TextStyle(fontSize: 18),
+              children: <Widget>[
+                const Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '옵션선택(필수)',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text('*', style: TextStyle(color: Colors.redAccent))
+                  ],
                 ),
-                Text('*', style: TextStyle(color: Colors.redAccent))
+                SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  height: 40,
+                  alignment: Alignment.centerLeft,
+                  decoration: const BoxDecoration(
+                      border: Border(
+                    top: BorderSide(width: 1),
+                    left: BorderSide(width: 1),
+                    right: BorderSide(width: 1),
+                  )),
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      '이동수단',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  alignment: Alignment.centerLeft,
+                  decoration: BoxDecoration(
+                      border: Border.all(), color: const Color(0xffe9ecef)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        RadioListTile(
+                          activeColor: Colors.black,
+                          title: const Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("카풀 신청"),
+                              Padding(
+                                padding: EdgeInsets.only(top: 2.0),
+                                child: Text(
+                                  " *카풀 위치를 한번 더 확인해 주세요.",
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.redAccent),
+                                ),
+                              ),
+                            ],
+                          ),
+                          value: 0,
+                          groupValue: carOptionValue,
+                          onChanged: (int? value) {
+                            bottomState(() {
+                              setState(() {
+                                carOptionValue = value!;
+                              });
+                            });
+                          },
+                        ),
+                        RadioListTile(
+                          activeColor: Colors.black,
+                          title: Text("비카풀 신청"),
+                          value: 1,
+                          groupValue: carOptionValue,
+                          onChanged: (int? value) {
+                            bottomState(() {
+                              setState(() {
+                                carOptionValue = value!;
+                              });
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  child: Row(
+                    children: [
+                      const Text(
+                        '결제금액',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            carOptionValue == 0 ? '15,900 원' : '8,900 원',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      surfaceTintColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12.0),
+                      child: Text(
+                        '결제하기',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
-            SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              height: 40,
-              alignment: Alignment.centerLeft,
-              decoration: const BoxDecoration(
-                  border: Border(
-                top: BorderSide(width: 1),
-                left: BorderSide(width: 1),
-                right: BorderSide(width: 1),
-              )),
-              child: const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Text(
-                  '이동수단',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              height: 150,
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(border: Border.all()),
-              child: Padding(
-                  padding: EdgeInsets.only(left: 8.0),
-                  child: Column(
-                    children: [
-                      RadioListTile(
-                        title: Text("A"),
-                        value: 0,
-                        groupValue: value2,
-                        onChanged: (int? value) {
-                          setState(() {
-                            value2 = value!;
-                            print(value);
-                          });
-                        },
-                      ),
-                      RadioListTile(
-                        title: Text("B"),
-                        value: 1,
-                        groupValue: value2,
-                        onChanged: (int? value) {
-                          setState(() {
-                            value2 = value!;
-                            print(value);
-                          });
-                        },
-                      ),
-                    ],
-                  )),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
