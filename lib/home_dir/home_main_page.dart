@@ -36,19 +36,23 @@ class _HomePageState extends State<HomePage>
           .doc('homeMainImages')
           .snapshots();
   final Stream<DocumentSnapshot<Map<String, dynamic>>> homeNotice =
-  FirebaseFirestore.instance
-      .collection('HomeMainPage')
-      .doc('homeNotice')
-      .snapshots();
+      FirebaseFirestore.instance
+          .collection('HomeMainPage')
+          .doc('homeNotice')
+          .snapshots();
   final Stream<DocumentSnapshot<Map<String, dynamic>>> homeExhibitions =
       FirebaseFirestore.instance
           .collection('HomeMainPage')
           .doc('homeExhibitions')
           .snapshots();
   final Stream<QuerySnapshot<Map<String, dynamic>>> homeCategory =
-  FirebaseFirestore.instance
-      .collection('HomeMainPage')
-      .doc('homeCategory').collection('Category').snapshots();
+      FirebaseFirestore.instance
+          .collection('HomeMainPage')
+          .doc('homeCategory')
+          .collection('Category')
+          .snapshots();
+  final Stream<QuerySnapshot<Map<String, dynamic>>> reservItems =
+      FirebaseFirestore.instance.collection('ReservItems').snapshots();
 
   @override
   void initState() {
@@ -177,21 +181,21 @@ class _HomePageState extends State<HomePage>
                           padding:
                               const EdgeInsets.only(top: 14.0, bottom: 14.0),
                           child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                            stream: homeNotice,
-                            builder: (context, snapshot) {
+                              stream: homeNotice,
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const SizedBox.shrink();
+                                }
 
-                              if(!snapshot.hasData){
-                                return const SizedBox.shrink();
-                              }
+                                var noticeText = snapshot.data;
 
-                              var noticeText = snapshot.data;
-
-                              return Text(
-                                  noticeText!['noticeText'].toString().replaceAll('\\n', '\n'),
-                                  maxLines: _noticeIndex ? 5 : 1,
-                                  overflow: TextOverflow.ellipsis);
-                            }
-                          ),
+                                return Text(
+                                    noticeText!['noticeText']
+                                        .toString()
+                                        .replaceAll('\\n', '\n'),
+                                    maxLines: _noticeIndex ? 5 : 1,
+                                    overflow: TextOverflow.ellipsis);
+                              }),
                         ),
                       ),
                       RotationTransition(
@@ -288,72 +292,77 @@ class _HomePageState extends State<HomePage>
                   child: SizedBox(
                     height: 120,
                     child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      stream: homeCategory,
-                      builder: (context, snapshot) {
+                        stream: homeCategory,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const CupertinoActivityIndicator();
+                          }
 
-                        if(!snapshot.hasData) {
-                          return const CupertinoActivityIndicator();
-                        }
+                          var categoryInfo = snapshot.data!.docs;
 
-                        var categoryInfo = snapshot.data!.docs;
-
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: categoryInfo.length,
-                          padding: const EdgeInsets.only(left: 8.0),
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16.0),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 144,
-                                      child: Image.network(
-                                        categoryInfo[index]['categoryImageUrl'],
-                                        fit: BoxFit.cover,
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: categoryInfo.length,
+                            padding: const EdgeInsets.only(left: 8.0),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 144,
+                                        child: Image.network(
+                                          categoryInfo[index]
+                                              ['categoryImageUrl'],
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
-                                    Container(
-                                      width: 144,
-                                      color: Colors.black.withOpacity(0.6),
-                                    ),
-                                    SizedBox(
-                                      width: 112,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            categoryInfo[index]['categoryMainText'],
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 4.0),
-                                            child: Text(
-                                              categoryInfo[index]['categorySubText'].toString().replaceAll('\\n', '\n'),
-                                              textAlign: TextAlign.center,
+                                      Container(
+                                        width: 144,
+                                        color: Colors.black.withOpacity(0.6),
+                                      ),
+                                      SizedBox(
+                                        width: 112,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              categoryInfo[index]
+                                                  ['categoryMainText'],
                                               style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white,
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 4.0),
+                                              child: Text(
+                                                categoryInfo[index]
+                                                        ['categorySubText']
+                                                    .toString()
+                                                    .replaceAll('\\n', '\n'),
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      }
-                    ),
+                              );
+                            },
+                          );
+                        }),
                   ),
                 ),
               ],
@@ -364,8 +373,8 @@ class _HomePageState extends State<HomePage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 32, left: 16.0),
+                const Padding(
+                  padding: EdgeInsets.only(top: 32, left: 16.0),
                   child: Text(
                     '최신 업데이트 일정',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -375,7 +384,18 @@ class _HomePageState extends State<HomePage>
                   padding: const EdgeInsets.only(top: 16),
                   child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: reservListView(4)),
+                      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: reservItems,
+                        builder: (context, snapshot) {
+                          if(!snapshot.hasData){
+                            return const CupertinoActivityIndicator();
+                          }
+
+                          var reservItem = snapshot.data!.docs;
+
+                          return reservListView(reservItem, 4);
+                        }
+                      )),
                 ),
                 const SizedBox(height: 8),
                 Padding(

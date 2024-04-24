@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:twothreehours_dev/reserv_dir/reserv_detail_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-Widget reservListView(int listCount) {
+Widget reservListView(List<QueryDocumentSnapshot<Map<String, dynamic>>> reservItem, int listCount) {
+  if(listCount > reservItem.length){
+    listCount = reservItem.length;
+  }
+
   return ListView.builder(
     padding: EdgeInsets.zero,
     shrinkWrap: true,
@@ -16,7 +21,7 @@ Widget reservListView(int listCount) {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return const ReservPageDetail();
+                  return const ReservDetailPage();
                 },
               ),
             );
@@ -32,8 +37,8 @@ Widget reservListView(int listCount) {
                   height: 104,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      'assets/images/test_photo.jpg',
+                    child: Image.network(
+                      reservItem[index]['scheduleMainImage'],
                       fit: BoxFit.cover,
                     ),
                   ),

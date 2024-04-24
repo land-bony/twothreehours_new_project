@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ReservPageDetail extends StatefulWidget {
-  const ReservPageDetail({super.key});
+class ReservDetailPage extends StatefulWidget {
+  const ReservDetailPage({super.key});
 
   @override
-  State<ReservPageDetail> createState() => _ReservPageDetailState();
+  State<ReservDetailPage> createState() => _ReservDetailPageState();
 }
 
-class _ReservPageDetailState extends State<ReservPageDetail> {
+class _ReservDetailPageState extends State<ReservDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

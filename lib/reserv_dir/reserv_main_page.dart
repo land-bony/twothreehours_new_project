@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:twothreehours_dev/reserv_dir/reservListViewFunction.dart';
-import 'package:twothreehours_dev/reserv_dir/reserv_detail_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReservMainPage extends StatefulWidget {
   const ReservMainPage({super.key});
@@ -11,6 +11,10 @@ class ReservMainPage extends StatefulWidget {
 }
 
 class _ReservMainPageState extends State<ReservMainPage> {
+  // Firebase CloudStorage Instance 선언
+  final Stream<QuerySnapshot<Map<String, dynamic>>> reservItems =
+  FirebaseFirestore.instance.collection('ReservItems').snapshots();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,8 +38,19 @@ class _ReservMainPageState extends State<ReservMainPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: SizedBox(
-          child: reservListView(10),
+        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: reservItems,
+          builder: (context, snapshot) {
+            if(!snapshot.hasData){
+              return const CupertinoActivityIndicator();
+            }
+
+            var reservItem = snapshot.data!.docs;
+
+            return SizedBox(
+              child: reservListView(reservItem, reservItem.length),
+            );
+          }
         ),
       ),
     );
