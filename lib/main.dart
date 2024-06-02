@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:twothreehours_dev/main_route_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +16,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '2-3HOURS',
+      // localization
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ko', 'KR'),
+      ],
+      locale: const Locale('ko'),
+      // Main Part
       theme: ThemeData(
           primaryColor: const Color(0xff0465f2),
           fontFamily: 'Pretendard',

@@ -1,22 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ReservDetailPage extends StatefulWidget {
-  const ReservDetailPage({super.key});
+  final QueryDocumentSnapshot<Map<String, dynamic>> reservItem;
+
+  const ReservDetailPage({Key? key, required this.reservItem}) : super(key: key);
 
   @override
   State<ReservDetailPage> createState() => _ReservDetailPageState();
 }
 
 class _ReservDetailPageState extends State<ReservDetailPage> {
+  QueryDocumentSnapshot<Map<String, dynamic>>? reservItem;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    reservItem = widget.reservItem;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(
+        title: const Text(
           '신청하기',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -29,8 +42,8 @@ class _ReservDetailPageState extends State<ReservDetailPage> {
             SizedBox(
               width: double.infinity,
               height: 240,
-              child: Image.asset(
-                'assets/images/test_photo.jpg',
+              child: Image.network(
+                reservItem?['mainImage'],
                 fit: BoxFit.cover,
               ),
             ),
@@ -57,25 +70,29 @@ class _ReservDetailPageState extends State<ReservDetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        Text(
+                        const Text(
                           '봉사일정',
                           style: TextStyle(fontSize: 16, color: Colors.black54),
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         Text(
-                          '2월 23일',
-                          style: TextStyle(fontSize: 16),
+                          DateFormat('yy년 MM월 dd일').format(DateTime.parse(reservItem!['reservDate'].toString())),
+                          style: const TextStyle(fontSize: 16),
                         ),
-                        SizedBox(width: 4),
-                        Text(
+                        const SizedBox(width: 4),
+                        const Text(
                           '•',
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Text(
-                          '오전 11시 시작',
+                          DateFormat('hh:mma').format(DateTime.parse(reservItem!['reservDate'].toString())),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const Text(
+                          ' 시작',
                           style: TextStyle(fontSize: 16),
                         ),
                       ],
@@ -769,4 +786,14 @@ class _ReservDetailPageState extends State<ReservDetailPage> {
       },
     );
   }
+}
+
+//카풀 모집시간 함수 정의
+Widget itemDateFuntion(String scheduleDate) {
+  String date =
+  DateFormat('MM월 dd일').format(DateTime.parse(scheduleDate)).toString();
+  String week =
+  DateFormat('E', 'ko').format(DateTime.parse(scheduleDate)).toString();
+
+  return Text('$date($week)');
 }
